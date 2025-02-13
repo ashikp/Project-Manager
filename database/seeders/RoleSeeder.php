@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+
 class RoleSeeder extends Seeder
 {
     public function run()
@@ -13,7 +14,7 @@ class RoleSeeder extends Seeder
         Role::create(['name' => 'client', 'guard_name' => 'web']);
         Role::create(['name' => 'client_team', 'guard_name' => 'web']);
         Role::create(['name' => 'associate', 'guard_name' => 'web']);
-        
+
         // Create Admin Permission
         Permission::create(['name' => 'admin.index', 'guard_name' => 'web']);
         Permission::create(['name' => 'admin.create', 'guard_name' => 'web']);
@@ -23,11 +24,9 @@ class RoleSeeder extends Seeder
         $this->assignPermissionToAdminRole();
     }
 
-    public function assignPermissionToAdminRole(){
+    public function assignPermissionToAdminRole()
+    {
         $role = Role::findByName('admin');
-        $role->givePermissionTo('admin.*');
+        $role->givePermissionTo('admin.index', 'admin.create', 'admin.edit', 'admin.delete');
     }
-
-
 }
-

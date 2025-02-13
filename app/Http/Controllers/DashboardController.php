@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ChatEvent;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\File;
@@ -22,7 +23,7 @@ class DashboardController extends Controller
             'publicFiles' => File::where('disk', 'public_access')->count(),
             'privateFiles' => File::where('disk', 'private_access')->count(),
             'teamMembers' => User::count(),
-            'recentMembers' => User::latest()->take(5)->get()->map(function($user) {
+            'recentMembers' => User::latest()->take(5)->get()->map(function ($user) {
                 return [
                     'id' => $user->id,
                     'avatar' => $user->avatar,
@@ -30,6 +31,8 @@ class DashboardController extends Controller
                 ];
             })
         ];
+
+        broadcast(new ChatEvent('Hello', 1));
 
         return Inertia::render('Dashboard', [
             'stats' => $stats,
@@ -42,7 +45,7 @@ class DashboardController extends Controller
                 ->latest()
                 ->take(5)
                 ->get()
-                ->map(function($project) {
+                ->map(function ($project) {
                     [$completed, $total] = $project->progress;
                     return [
                         'id' => $project->id,
@@ -60,8 +63,8 @@ class DashboardController extends Controller
     {
         $total = Task::count();
         if ($total === 0) return 0;
-        
+
         $completed = Task::where('status', 'Done')->count();
         return ($completed / $total) * 100;
     }
-} 
+}
