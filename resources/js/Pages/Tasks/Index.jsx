@@ -59,8 +59,13 @@ export default function TasksIndex({ project, tasks }) {
   };
 
   return (
-    <AuthenticatedLayout header={{ title: "Welcome back!" }}>
-      <Head title="Tasks" />
+    <AuthenticatedLayout 
+      header={{ 
+        title: project.name,
+        currentProject: project
+      }}
+    >
+      <Head title={`${project.name} - Tasks`} />
       
       <div className="p-6">
         <p className="text-muted-foreground mb-6">
