@@ -10,6 +10,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\FileManagerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserManagementController;
 
 
 
@@ -49,5 +50,13 @@ Route::get('/files', [FileManagerController::class, 'index'])->name('files.index
 Route::post('/files', [FileManagerController::class, 'store'])->middleware('auth')->name('files.store');
 Route::get('/files/{file}/download', [FileManagerController::class, 'download'])->name('files.download');
 Route::delete('/files/{file}', [FileManagerController::class, 'destroy'])->middleware('auth')->name('files.destroy');
+
+Route::group(['middleware' => ['role:admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {    
+    Route::get('/', [AdminPanelController::class, 'index'])->name('index');
+    Route::resource('users', UserManagementController::class);
+    Route::get('/chats', [PusherController::class, 'index'])->name('chat.index');
+    Route::post('/chats/boardcast', [PusherController::class, 'broadcast'])->name('chat.broadcast');
+    Route::post('/chats/receive', [PusherController::class, 'recive'])->name('chat.receive');
+});
 
 require __DIR__.'/auth.php';
