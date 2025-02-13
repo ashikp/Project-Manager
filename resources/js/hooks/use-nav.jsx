@@ -7,14 +7,16 @@ import {
   MessageSquare, 
   FileBox, 
   UserCircle, 
-  Settings 
+  Settings,
+  Users 
 } from "lucide-react"
 import { usePage } from '@inertiajs/react'
 
 export function useNav() {
-  const { url } = usePage();
+  const { url, props } = usePage();
   const isProjectRoute = url.startsWith('/projects/');
   const projectId = isProjectRoute ? url.split('/')[2] : null;
+  const isAdmin = props.auth?.user?.roles?.includes('admin');
 
   const data = useMemo(() => ({
     navMain: [
@@ -67,14 +69,18 @@ export function useNav() {
             icon: <UserCircle className="h-4 w-4 mr-2" />
           },
           {
+            title: "User Management",
+            url: route('admin.users.index'),
+            icon: <Users className="h-4 w-4 mr-2" />
+          },          ...(isAdmin ? [{
             title: "Admin Panel",
             url: route('admin.index'),
             icon: <Settings className="h-4 w-4 mr-2" />
-          }
+          }] : [])
         ],
       },
     ],
-  }), [projectId, url])
+  }), [projectId, url, isAdmin])
 
   return data
 }
