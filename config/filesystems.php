@@ -60,6 +60,21 @@ return [
             'report' => false,
         ],
 
+        'public_access' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/public_access'),
+            'url' => env('APP_URL').'/storage/public_access',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
+        'private_access' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/private_access'),
+            'visibility' => 'private',
+            'throw' => false,
+        ],
+
     ],
 
     /*

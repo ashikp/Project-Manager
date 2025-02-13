@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminPanelController;
 use App\Http\Controllers\PusherController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\FileManagerController;
 
 
 
@@ -45,5 +46,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('tasks/{task}/comments', [TaskController::class, 'addComment'])->name('tasks.comments.store');
     Route::patch('projects/{project}/tasks/{task}', [TaskController::class, 'updateDetails'])->name('tasks.update.details');
 });
+
+Route::get('/files', [FileManagerController::class, 'index'])->name('files.index');
+Route::post('/files', [FileManagerController::class, 'store'])->middleware('auth')->name('files.store');
+Route::get('/files/{file}/download', [FileManagerController::class, 'download'])->name('files.download');
+Route::delete('/files/{file}', [FileManagerController::class, 'destroy'])->middleware('auth')->name('files.destroy');
 
 require __DIR__.'/auth.php';

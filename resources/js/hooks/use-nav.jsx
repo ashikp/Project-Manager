@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { ListTodo } from "lucide-react"
+import { ListTodo, FolderOpen } from "lucide-react"
 import { usePage } from '@inertiajs/react'
 
 export function useNav() {
@@ -32,10 +32,15 @@ export function useNav() {
           ...(projectId ? [{
             title: "Project Tasks",
             url: route('project.tasks.index', projectId),
+            icon: <ListTodo className="h-4 w-4 mr-2" />
           }] : []),
           {
             title: "Chat",
             url: route('chat.index'),
+          },
+          {
+            title: "File Manager",
+            url: route('files.index'),
           }
         ],
       },
