@@ -47,10 +47,13 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('projects/{project}/tasks/{task}', [TaskController::class, 'updateDetails'])->name('tasks.update.details');
 });
 
-Route::get('/files', [FileManagerController::class, 'index'])->name('files.index');
-Route::post('/files', [FileManagerController::class, 'store'])->middleware('auth')->name('files.store');
-Route::get('/files/{file}/download', [FileManagerController::class, 'download'])->name('files.download');
-Route::delete('/files/{file}', [FileManagerController::class, 'destroy'])->middleware('auth')->name('files.destroy');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/files/{project?}', [FileManagerController::class, 'index'])->name('files.index');
+    Route::post('/files', [FileManagerController::class, 'store'])->middleware('auth')->name('files.store');
+    Route::get('/files/{file}/download', [FileManagerController::class, 'download'])->name('files.download');
+    Route::delete('/files/{file}', [FileManagerController::class, 'destroy'])->middleware('auth')->name('files.destroy');
+    Route::get('/files/{file}/view', [FileManagerController::class, 'view'])->name('files.view');
+});
 
 Route::group(['middleware' => ['role:admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {    
     Route::get('/', [AdminPanelController::class, 'index'])->name('index');
