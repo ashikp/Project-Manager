@@ -148,4 +148,26 @@ class FileManagerController extends Controller
 
         return back();
     }
+
+    public function versions(File $file)
+    {
+        $versions = $file->versions()
+            ->with('creator:id,name')
+            ->orderBy('version', 'desc')
+            ->get()
+            ->map(function($version) {
+                return [
+                    'id' => $version->id,
+                    'version' => $version->version,
+                    'created_by_name' => $version->creator->name,
+                    'created_at' => $version->created_at,
+                    'comment' => $version->comment,
+                ];
+            });
+
+        return Inertia::render('FileManager/FileVersions', [
+            'file' => $file->only('id', 'original_name', 'version'),
+            'versions' => $versions,
+        ]);
+    }
 } 

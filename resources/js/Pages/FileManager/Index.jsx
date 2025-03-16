@@ -26,7 +26,8 @@ import {
   Download,
   Trash2,
   Link,
-  Lock
+  Lock,
+  History
 } from 'lucide-react';
 import { router } from '@inertiajs/react';
 import { formatBytes } from '@/lib/utils';
@@ -36,6 +37,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 function FileCard({ file, onDelete, onFileAccess }) {
   const [copied, setCopied] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const getFileIcon = () => {
     if (file.type.startsWith('image/')) {
@@ -75,6 +77,10 @@ function FileCard({ file, onDelete, onFileAccess }) {
                 View
               </DropdownMenuItem>
             )}
+            <DropdownMenuItem onClick={() => setOpen(true)}>
+              <History className="h-4 w-4 mr-2" />
+              Versions ({file.versions?.length || 0})
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onDelete(file)}>
               <Trash2 className="h-4 w-4 mr-2" />
               Delete
@@ -99,11 +105,16 @@ function FileCard({ file, onDelete, onFileAccess }) {
                 🔒 Protected
               </span>
             )}
+            <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
+              v{file.version || 1}
+            </span>
           </div>
           <p className="font-medium truncate max-w-[200px]">{file.original_name}</p>
           <p className="text-sm text-muted-foreground">{formatBytes(file.size)}</p>
         </div>
       </div>
+
+      <FileVersionDialog file={file} open={open} onOpenChange={setOpen} />
     </div>
   );
 }

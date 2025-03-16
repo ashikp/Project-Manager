@@ -53,6 +53,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/files/{file}/download', [FileManagerController::class, 'download'])->name('files.download');
     Route::delete('/files/{file}', [FileManagerController::class, 'destroy'])->middleware('auth')->name('files.destroy');
     Route::get('/files/{file}/view', [FileManagerController::class, 'view'])->name('files.view');
+    Route::get('/files/{file}/versions', [FileManagerController::class, 'versions'])->name('files.versions');
+    Route::post('/files/{file}/versions', [FileManagerController::class, 'uploadVersion'])->name('files.upload-version');
 });
 
 Route::group(['middleware' => ['role:admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {    

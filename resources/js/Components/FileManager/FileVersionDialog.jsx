@@ -8,9 +8,7 @@ import { useState } from 'react';
 import { History } from "lucide-react";
 import { format } from 'date-fns';
 
-export default function FileVersionDialog({ file }) {
-    const [open, setOpen] = useState(false);
-    
+export default function FileVersionDialog({ file, open, onOpenChange }) {
     const { data, setData, post, processing, reset, errors } = useForm({
         file: null,
         comment: ''
@@ -23,23 +21,17 @@ export default function FileVersionDialog({ file }) {
         formData.append('file', data.file);
         formData.append('comment', data.comment);
 
-        post(route('files.version.store', file.id), {
+        post(route('files.upload-version', file.id), {
             body: formData,
             onSuccess: () => {
-                setOpen(false);
+                onOpenChange(false);
                 reset();
             }
         });
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                    <History className="h-4 w-4 mr-2" />
-                    Versions ({file.versions.length})
-                </Button>
-            </DialogTrigger>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-2xl">
                 <DialogHeader>
                     <DialogTitle>File Versions</DialogTitle>
